@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">تطبيق الطقس</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">الاعدادات</string>
+
+    <string name="menu_home">الرئيسيه</string>
+    <string name="menu_favorite">المفضله</string>
+    <string name="menu_alarm">المنبة</string>
+    <string name="menu_setting">الاعدادات</string>
+    <string name="tv_Wind">الرياح</string>
+    <string name="tv_cloudVlaue">الغيوم</string>
+    <string name="tv_visibility">الرؤيه</string>
+    <string name="tv_humidity">الرطوبه</string>
+    <string name="tv_pressure">الضغط</string>
+    <string name="tv_feelsLike">تبدو</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_addToFavorite">حفظ</string>
+    <string name="tv_language">اللغة</string>
+    <string name="rb_english">انجليزي</string>
+    <string name="rb_arabic">عربي</string>
+    <string name="tv_location">الموقع</string>
+    <string name="rb_gps">موقعى</string>
+    <string name="rb_map">خريطه</string>
+    <string name="tv_temperature">درجه الحراره</string>
+    <string name="rb_fehrenheit">فهرنهايت</string>
+    <string name="rb_kelvin">كلفن</string>
+    <string name="rb_celsius">سيليزيس</string>
+    <string name="tv_notification">الاشعارات</string>
+    <string name="rb_enabled">مفعل</string>
+    <string name="rb_disabled">غير مفعل</string>
+    <string name="tv_windSpeed">سرعه الرياح</string>
+    <string name="rb_meter">متر/ث</string>
+    <string name="rb_mile">ميل/س</string>
+    <string name="map_fragment">خريطه</string>
+    <string name="fragmentFavorite">المفضله</string>
+</resources>

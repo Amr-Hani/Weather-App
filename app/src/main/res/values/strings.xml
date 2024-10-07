@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">WitherApp</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_alarm">Alarm</string>
+    <string name="menu_setting">Setting</string>
+    <string name="tv_Wind">Wind\n</string>
+    <string name="tv_cloudVlaue">Cloud</string>
+    <string name="tv_visibility">Visibility</string>
+    <string name="tv_humidity">Humidity</string>
+    <string name="tv_pressure">Pressure</string>
+    <string name="tv_feelsLike">Feels Like</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_addToFavorite">Save</string>
+    <string name="tv_language">Language</string>
+    <string name="rb_english">English</string>
+    <string name="rb_arabic">Arabic</string>
+    <string name="tv_location">Location</string>
+    <string name="rb_gps">GPS</string>
+    <string name="rb_map">Map</string>
+    <string name="tv_temperature">Temperature</string>
+    <string name="rb_fehrenheit">Fehrenheit</string>
+    <string name="rb_kelvin">Kelvin</string>
+    <string name="rb_celsius">Celsius</string>
+    <string name="tv_notification">Notification</string>
+    <string name="rb_enabled">Enabled</string>
+    <string name="rb_disabled">Disabled</string>
+    <string name="tv_windSpeed">Wind Speed</string>
+    <string name="rb_meter">Meter / Sec</string>
+    <string name="rb_mile">Mile / Hour</string>
+    <string name="map_fragment">Map</string>
+    <string name="fragmentFavorite">Favorite</string>
+</resources>

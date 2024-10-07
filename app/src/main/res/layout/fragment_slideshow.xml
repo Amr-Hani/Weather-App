@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constrain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D1CBAD">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_language"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginStart="8dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_languageSetting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/tv_language" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_languageRadio"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:elevation="16dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_language"
+        app:layout_constraintStart_toStartOf="@+id/cv_language"
+        app:layout_constraintTop_toBottomOf="@+id/cv_language">
+
+        <RadioGroup
+            android:id="@+id/rg_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_english"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_english" />
+
+            <RadioButton
+                android:id="@+id/rb_arabic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_arabic" />
+        </RadioGroup>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_Location"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cv_language"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_locationSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/tv_location" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tv_locationRadio"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="16dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_Location"
+        app:layout_constraintStart_toStartOf="@+id/cv_Location"
+        app:layout_constraintTop_toBottomOf="@+id/cv_Location">
+
+        <RadioGroup
+            android:id="@+id/rg_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_gps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_gps" />
+
+            <RadioButton
+                android:id="@+id/rb_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_map" />
+        </RadioGroup>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_temperature"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_windSpeed"
+        app:layout_constraintStart_toStartOf="@+id/cv_windSpeed"
+        app:layout_constraintTop_toBottomOf="@+id/cv_windSpeed">
+
+
+        <TextView
+            android:id="@+id/tv_temperatureSetting"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/tv_temperature" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_temperatureSetting"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="16dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_temperature"
+        app:layout_constraintStart_toStartOf="@+id/cv_temperature"
+        app:layout_constraintTop_toBottomOf="@+id/cv_temperature">
+
+        <RadioGroup
+            android:id="@+id/rg_temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_celsius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_celsius" />
+
+            <RadioButton
+                android:id="@+id/rb_kelvin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_kelvin" />
+
+            <RadioButton
+                android:id="@+id/rb_fehrenheit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_fehrenheit" />
+        </RadioGroup>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_notification"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_locationRadio"
+        app:layout_constraintStart_toStartOf="@+id/tv_locationRadio"
+        app:layout_constraintTop_toBottomOf="@+id/tv_locationRadio">
+
+        <TextView
+            android:id="@+id/tv_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/tv_notification" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_notificationSetting"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="16dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_notification"
+        app:layout_constraintStart_toStartOf="@+id/cv_notification"
+        app:layout_constraintTop_toBottomOf="@+id/cv_notification">
+
+        <RadioGroup
+            android:id="@+id/rg_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_enabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_enabled" />
+
+            <RadioButton
+                android:id="@+id/rb_disabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_disabled" />
+        </RadioGroup>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_windSpped"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_languageRadio"
+        app:layout_constraintStart_toStartOf="@+id/cv_languageRadio"
+        app:layout_constraintTop_toBottomOf="@+id/cv_languageRadio">
+
+        <TextView
+            android:id="@+id/tv_windSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/tv_windSpeed" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_windSpeed"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="16dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_windSpped"
+        app:layout_constraintStart_toStartOf="@+id/cv_windSpped"
+        app:layout_constraintTop_toBottomOf="@+id/cv_windSpped">
+
+        <RadioGroup
+            android:id="@+id/rg_windSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_meter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_meter" />
+
+            <RadioButton
+                android:id="@+id/rb_mile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_mile" />
+        </RadioGroup>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

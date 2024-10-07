@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.witherapp.ui.home.view.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <argument
+            android:name="LatLong"
+            app:argType="string"
+            android:defaultValue="null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_alarm"
+        android:name="com.example.witherapp.ui.gallery.GalleryFragment"
+        android:label="@string/menu_alarm"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.example.witherapp.ui.slideshow.SettingFragment"
+        android:label="@string/menu_setting"
+        tools:layout="@layout/fragment_slideshow" >
+        <action
+            android:id="@+id/action_nav_setting_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_setting_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_favorite"
+        android:name="com.example.witherapp.favorite.view.FavoriteFragment"
+        android:label="@string/fragmentFavorite"
+        tools:layout="@layout/fragment_favorite">
+        <action
+            android:id="@+id/action_nav_favorite_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_nav_favorite_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.witherapp.MapsFragment"
+        android:label="@string/map_fragment"
+        tools:layout="@layout/fragment_maps">
+        <action
+            android:id="@+id/action_mapsFragment_to_nav_favorite"
+            app:destination="@id/nav_favorite" />
+        <argument
+            android:name="map"
+            app:argType="string"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_mapsFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+</navigation>
