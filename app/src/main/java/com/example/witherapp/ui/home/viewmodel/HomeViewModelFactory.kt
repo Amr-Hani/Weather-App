@@ -12,7 +12,7 @@ class HomeViewModelFactory(private val repo: Repo):ViewModelProvider.Factory {
         }
         else
         {
-            throw IllegalArgumentException(" class view  model not found ")
+            throw IllegalArgumentException(" class view  model not fount")
             }
     }
 }

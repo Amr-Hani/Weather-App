@@ -3,7 +3,7 @@ package com.example.witherapp.database
 import com.example.witherapp.model.FavoritePlace
 import kotlinx.coroutines.flow.Flow
 
-class FavoritePlaceLocalDataSource(val dao: DAO) {
+class LocalDataSource(val dao: DAO) {
 
     suspend fun insert(favoritePlace: FavoritePlace): Long =
         dao.insertFavoriteLocation(favoritePlace)

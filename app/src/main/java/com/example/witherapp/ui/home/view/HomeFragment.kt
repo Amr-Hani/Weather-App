@@ -30,7 +30,7 @@ import com.example.witherapp.Language
 import com.example.witherapp.MyKey
 import com.example.witherapp.Units
 import com.example.witherapp.Wind
-import com.example.witherapp.database.FavoritePlaceLocalDataSource
+import com.example.witherapp.database.LocalDataSource
 import com.example.witherapp.database.MyRoomDatabase
 import com.example.witherapp.databinding.FragmentHomeBinding
 import com.example.witherapp.model.CurrentWeatherResponse
@@ -39,7 +39,7 @@ import com.example.witherapp.model.WitherForecastItem
 import com.example.witherapp.model.WitherForecastResponse
 import com.example.witherapp.network.ApiServices
 import com.example.witherapp.network.RetrofitHelper
-import com.example.witherapp.network.WitherOfTheDayRemoteDataSource
+import com.example.witherapp.network.RemoteDataSource
 import com.example.witherapp.ui.home.viewmodel.HomeViewModel
 import com.example.witherapp.ui.home.viewmodel.HomeViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -74,26 +74,15 @@ class HomeFragment : Fragment() {
     var max = Double.MIN_VALUE
     var min = Double.MAX_VALUE
     val gson = Gson()
+    var isConnected = false
+    lateinit var message:String
     override fun onStart() {
         super.onStart()
 
-        val connectivityManager =
-            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
 
-        val isConnected =
-            networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-        sharedPreferences =
-            requireContext().getSharedPreferences(MyKey.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        language = sharedPreferences.getString(MyKey.LANGUAGE_KEY, Language.en.toString())
-            ?: Language.en.toString()
-        unit = sharedPreferences.getString(MyKey.UNIT_KEY, Units.celsius.toString())
-            ?: Units.celsius.toString()
-        wind = sharedPreferences.getString(MyKey.WIND_KEY, Wind.meter.toString())
-            ?: Wind.meter.toString()
+
         val argument: MutableList<String> = MutableList(3) { "" }
-
+        Log.d("TAG", "onStart: isConnected $isConnected")
         if (requireArguments() != null) {
             val split = HomeFragmentArgs.fromBundle(requireArguments()).latLong.split(",")
             if (split.size == 3) {
@@ -133,7 +122,66 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-        } else {
+        }
+
+    }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.progressBar.visibility = View.VISIBLE
+        homeViewModelFactory = HomeViewModelFactory(
+            Repo.getInstance(
+                RemoteDataSource.getInstance(
+                    RetrofitHelper.retrofitInstance.create(ApiServices::class.java)
+                ),
+                LocalDataSource(
+                    MyRoomDatabase.getInstance(requireContext()).getAllFavoritePlace()
+                )
+            )
+        )
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        dailyHourAdapter = DailyHourAdapter()
+        witherForCastAdapter = WitherForCastAdapter()
+
+        binding.rvTempretureDay.apply {
+            adapter = dailyHourAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        binding.rvWitherForCast.apply {
+            adapter = witherForCastAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+
+        sharedPreferences =
+            requireContext().getSharedPreferences(MyKey.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+
+        language = sharedPreferences.getString(MyKey.LANGUAGE_KEY, Language.en.toString())
+            ?: Language.en.toString()
+        unit = sharedPreferences.getString(MyKey.UNIT_KEY, Units.celsius.toString())
+            ?: Units.celsius.toString()
+        wind = sharedPreferences.getString(MyKey.WIND_KEY, Wind.meter.toString())
+            ?: Wind.meter.toString()
+
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+
+        isConnected =
+            networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+
+        if(!isConnected) {
             when (message) {
                 "FAVORITE" -> {
                     Toast.makeText(
@@ -246,42 +294,6 @@ class HomeFragment : Fragment() {
             }
             Log.d("TAG", "onStart: get data from caching")
         }
-    }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        homeViewModelFactory = HomeViewModelFactory(
-            Repo.getInstance(
-                WitherOfTheDayRemoteDataSource.getInstance(
-                    RetrofitHelper.retrofitInstance.create(ApiServices::class.java)
-                ),
-                FavoritePlaceLocalDataSource(
-                    MyRoomDatabase.getInstance(requireContext()).getAllFavoritePlace()
-                )
-            )
-        )
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
-        dailyHourAdapter = DailyHourAdapter()
-        witherForCastAdapter = WitherForCastAdapter()
-
-        binding.rvTempretureDay.apply {
-            adapter = dailyHourAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
-
-        binding.rvWitherForCast.apply {
-            adapter = witherForCastAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
 
         currentWitherOfTheDayLifeCycle()
         forCastWitherOfTheWeekLifeCycle()
@@ -292,11 +304,20 @@ class HomeFragment : Fragment() {
             homeViewModel.witherOfTheDayStateFlow.collectLatest {
                 when (it) {
                     is ApiState.Loading -> {
-                        Log.d("TAG", "onCreateView: Loading witherOfTheDay")
+                        binding.cardView.visibility = View.GONE
+                        binding.cardView2.visibility = View.GONE
+                        binding.rvTempretureDay.visibility = View.GONE
+                        binding.rvWitherForCast.visibility = View.GONE
+                        Thread.sleep(1000)
                     }
 
                     is ApiState.Success -> {
                         currentWitherOfTheDaySuccess(it.data, language)
+                        binding.progressBar.visibility = View.GONE
+                        binding.cardView.visibility = View.VISIBLE
+                        binding.cardView2.visibility = View.VISIBLE
+                        binding.rvTempretureDay.visibility = View.VISIBLE
+                        binding.rvWitherForCast.visibility = View.VISIBLE
                     }
 
                     else -> {
@@ -419,7 +440,8 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             homeViewModel.witherForCastStateFlow.collect {
                 when (it) {
-                    is ApiState.Failure -> Log.d("TAG", "onCreateView: Fail witherForCast")
+                    is ApiState.Failure -> {
+                        }
                     is ApiState.Loading -> Log.d("TAG", "onCreateView: Success witherForCast")
                     is ApiState.Success -> {
                         forCastHourlyOfTheDay(it.data)

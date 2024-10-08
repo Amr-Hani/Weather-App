@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.witherapp.R
-import com.example.witherapp.database.FavoritePlaceLocalDataSource
+import com.example.witherapp.database.LocalDataSource
 import com.example.witherapp.database.MyRoomDatabase
 import com.example.witherapp.databinding.FragmentMapsBinding
 import com.example.witherapp.favorite.viewmodel.FavoriteViewModel
@@ -23,7 +23,7 @@ import com.example.witherapp.model.FavoritePlace
 import com.example.witherapp.model.Repo
 import com.example.witherapp.network.ApiServices
 import com.example.witherapp.network.RetrofitHelper
-import com.example.witherapp.network.WitherOfTheDayRemoteDataSource
+import com.example.witherapp.network.RemoteDataSource
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -66,10 +66,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
         favoriteViewModelFactory = FavoriteViewModelFactory(
             Repo.getInstance(
-                WitherOfTheDayRemoteDataSource.getInstance(
+                RemoteDataSource.getInstance(
                     RetrofitHelper.retrofitInstance.create(ApiServices::class.java)
                 ),
-                FavoritePlaceLocalDataSource(
+                LocalDataSource(
                     MyRoomDatabase.getInstance(requireContext()).getAllFavoritePlace()
                 )
             )

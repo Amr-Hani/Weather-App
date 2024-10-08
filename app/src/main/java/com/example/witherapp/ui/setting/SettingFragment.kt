@@ -60,13 +60,13 @@ class SettingFragment : Fragment() {
                 sharedPreferences.edit().putString(MyKey.LANGUAGE_KEY, Language.ar.toString()).apply()
                 Thread.sleep(500)
                 changeLanguage("ar")
-                restartApp()
+                //restartApp()
             } else {
                 Toast.makeText(requireContext(), "english", Toast.LENGTH_SHORT).show()
                 sharedPreferences.edit().putString(MyKey.LANGUAGE_KEY,Language.en.toString()).apply()
                 Thread.sleep(500)
                 changeLanguage("en")
-                restartApp()
+                //restartApp()
             }
         }
     }
@@ -83,17 +83,17 @@ class SettingFragment : Fragment() {
                 sharedPreferences.edit().putString(MyKey.UNIT_KEY, Units.kelvin.toString()).apply()
                 Toast.makeText(requireContext(), Units.kelvin.toString(), Toast.LENGTH_SHORT).show()
                 Thread.sleep(500)
-                restartApp()
+                //restartApp()
             } else if (binding.rbFehrenheit == binding.root.findViewById(checkedId)) {
                 sharedPreferences.edit().putString(MyKey.UNIT_KEY, Units.fehrenheit.toString()).apply()
                 Toast.makeText(requireContext(), Units.fehrenheit.toString(), Toast.LENGTH_SHORT).show()
                 Thread.sleep(500)
-                restartApp()
+                //restartApp()
             } else {
                 sharedPreferences.edit().putString(MyKey.UNIT_KEY, Units.celsius.toString()).apply()
                 Toast.makeText(requireContext(), Units.celsius.toString(), Toast.LENGTH_SHORT).show()
                 Thread.sleep(500)
-                restartApp()
+                //restartApp()
             }
 
         }
@@ -134,12 +134,12 @@ class SettingFragment : Fragment() {
             {
                 sharedPreferences.edit().putString(MyKey.WIND_KEY,Wind.mile.toString()).apply()
                 Thread.sleep(500)
-                restartApp()
+//                restartApp()
             }else
             {
                 sharedPreferences.edit().putString(MyKey.WIND_KEY,Wind.meter.toString()).apply()
                 Thread.sleep(500)
-                restartApp()
+//                restartApp()
             }
         }
     }
@@ -156,12 +156,12 @@ class SettingFragment : Fragment() {
             {
                 sharedPreferences.edit().putString(MyKey.NOTIFICATION_KEY,Notification.disabled.toString()).apply()
                 Thread.sleep(500)
-                restartApp()
+                //restartApp()
             }else
             {
                 sharedPreferences.edit().putString(MyKey.NOTIFICATION_KEY,Notification.enabled.toString()).apply()
                 Thread.sleep(500)
-                restartApp()
+                //restartApp()
             }
         }
     }

@@ -8,20 +8,37 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/background">
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/tv_location"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -29,10 +46,10 @@
 
             <TextView
                 android:id="@+id/tv_date"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="8dp"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,20 +85,20 @@
 
                     <TextView
                         android:id="@+id/tv_tempreture"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="16dp"
+                        android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_description"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="@+id/tv_tempreture"
                         app:layout_constraintTop_toBottomOf="@+id/tv_tempreture" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -104,6 +121,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/rv_tempretureDay" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -131,21 +149,21 @@
 
                     <TextView
                         android:id="@+id/tv_windValue"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="@+id/iv_windImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_windImage"
                         app:layout_constraintTop_toBottomOf="@+id/iv_windImage" />
 
                     <TextView
                         android:id="@+id/tv_wind"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_Wind"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/iv_windImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_windImage"
@@ -164,21 +182,21 @@
 
                     <TextView
                         android:id="@+id/tv_cloudValue"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="@+id/iv_cloudImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_cloudImage"
                         app:layout_constraintTop_toBottomOf="@+id/iv_cloudImage" />
 
                     <TextView
                         android:id="@+id/tv_cloud"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_cloudVlaue"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_cloudValue"
                         app:layout_constraintStart_toStartOf="@+id/tv_cloudValue"
@@ -207,11 +225,11 @@
 
                     <TextView
                         android:id="@+id/textView13"
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_visibility"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_visibilityValue"
                         app:layout_constraintStart_toStartOf="@+id/tv_visibilityValue"
@@ -231,9 +249,9 @@
                     <TextView
                         android:id="@+id/tv_humidityValue"
                         android:layout_width="wrap_content"
-                        android:textColor="@color/white"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="@+id/iv_humidityImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_humidityImage"
                         app:layout_constraintTop_toBottomOf="@+id/iv_humidityImage" />
@@ -298,8 +316,8 @@
                         android:id="@+id/tv_feelsLike"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="@+id/iv_feelsLikeImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_feelsLikeImage"
                         app:layout_constraintTop_toBottomOf="@+id/iv_feelsLikeImage" />
@@ -308,11 +326,11 @@
                         android:id="@+id/textView20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
                         android:text="@string/tv_feelsLike"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/tv_feelsLike"
                         app:layout_constraintStart_toStartOf="@+id/tv_feelsLike"
