@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/nav_setting"
-        android:name="com.example.witherapp.ui.slideshow.SettingFragment"
+        android:name="com.example.witherapp.ui.setting.SettingFragment"
         android:label="@string/menu_setting"
         tools:layout="@layout/fragment_slideshow" >
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.example.witherapp.MapsFragment"
+        android:name="com.example.witherapp.map.MapsFragment"
         android:label="@string/map_fragment"
         tools:layout="@layout/fragment_maps">
         <action

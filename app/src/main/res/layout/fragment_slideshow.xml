@@ -5,7 +5,7 @@
     android:id="@+id/constrain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D1CBAD">
+    android:background="@color/background">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_language"
@@ -22,13 +22,12 @@
             android:id="@+id/tv_languageSetting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_card"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/tv_language" />
+            android:padding="16dp"
+            android:text="@string/tv_language"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
 
     </androidx.cardview.widget.CardView>
 
@@ -47,22 +46,24 @@
             android:id="@+id/rg_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp">
+            android:background="@drawable/side_nav_bar"
+            android:padding="8dp">
 
             <RadioButton
                 android:id="@+id/rb_english"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_english" />
+                android:text="@string/rb_english"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
 
             <RadioButton
                 android:id="@+id/rb_arabic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_arabic" />
+                android:text="@string/rb_arabic"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
         </RadioGroup>
 
     </androidx.cardview.widget.CardView>
@@ -83,10 +84,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="8dp"
+            android:background="@drawable/background_card"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/tv_location" />
+            android:padding="16dp"
+            android:text="@string/tv_location"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -104,22 +107,24 @@
             android:id="@+id/rg_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp">
+            android:background="@drawable/side_nav_bar"
+            android:padding="8dp">
 
             <RadioButton
                 android:id="@+id/rb_gps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_gps" />
+                android:text="@string/rb_gps"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
 
             <RadioButton
                 android:id="@+id/rb_map"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_map" />
+                android:text="@string/rb_map"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
         </RadioGroup>
     </androidx.cardview.widget.CardView>
 
@@ -136,16 +141,15 @@
 
         <TextView
             android:id="@+id/tv_temperatureSetting"
-            android:layout_width="170dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_card"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/tv_temperature" />
+            android:padding="16dp"
+            android:text="@string/tv_temperature"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -162,29 +166,33 @@
         <RadioGroup
             android:id="@+id/rg_temperature"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp">
+            android:background="@drawable/side_nav_bar"
+            android:padding="8dp"
+            android:layout_height="wrap_content">
 
             <RadioButton
                 android:id="@+id/rb_celsius"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_celsius" />
+                android:text="@string/rb_celsius"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
 
             <RadioButton
                 android:id="@+id/rb_kelvin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_kelvin" />
+                android:text="@string/rb_kelvin"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
 
             <RadioButton
                 android:id="@+id/rb_fehrenheit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_fehrenheit" />
+                android:text="@string/rb_fehrenheit"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
         </RadioGroup>
 
     </androidx.cardview.widget.CardView>
@@ -204,13 +212,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_card"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/tv_notification" />
+            android:padding="16dp"
+            android:text="@string/tv_notification"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -228,22 +235,24 @@
             android:id="@+id/rg_notification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp">
+            android:background="@drawable/side_nav_bar"
+            android:padding="8dp">
 
             <RadioButton
                 android:id="@+id/rb_enabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_enabled" />
+                android:text="@string/rb_enabled"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
 
             <RadioButton
                 android:id="@+id/rb_disabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_disabled" />
+                android:text="@string/rb_disabled"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
         </RadioGroup>
     </androidx.cardview.widget.CardView>
 
@@ -261,13 +270,12 @@
             android:id="@+id/tv_windSpeed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_card"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/tv_windSpeed" />
+            android:padding="16dp"
+            android:text="@string/tv_windSpeed"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
 
     </androidx.cardview.widget.CardView>
 
@@ -286,19 +294,24 @@
             android:id="@+id/rg_windSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:background="@drawable/side_nav_bar"
+            android:padding="8dp">
 
             <RadioButton
                 android:id="@+id/rb_meter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_meter" />
+                android:text="@string/rb_meter"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
 
             <RadioButton
                 android:id="@+id/rb_mile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rb_mile" />
+                android:text="@string/rb_mile"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
         </RadioGroup>
     </androidx.cardview.widget.CardView>
 

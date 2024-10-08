@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/background">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -17,18 +18,22 @@
 
             <TextView
                 android:id="@+id/tv_location"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_date"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_location" />
@@ -46,12 +51,13 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_card">
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
@@ -62,6 +68,7 @@
 
                     <TextView
                         android:id="@+id/tv_tempreture"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
@@ -71,6 +78,7 @@
 
                     <TextView
                         android:id="@+id/tv_description"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -107,7 +115,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_card">
 
                     <ImageView
                         android:id="@+id/iv_windImage"
@@ -122,6 +131,7 @@
 
                     <TextView
                         android:id="@+id/tv_windValue"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -131,10 +141,12 @@
 
                     <TextView
                         android:id="@+id/tv_wind"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_Wind"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/iv_windImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_windImage"
                         app:layout_constraintTop_toBottomOf="@+id/tv_windValue" />
@@ -152,6 +164,7 @@
 
                     <TextView
                         android:id="@+id/tv_cloudValue"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -161,10 +174,12 @@
 
                     <TextView
                         android:id="@+id/tv_cloud"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_cloudVlaue"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_cloudValue"
                         app:layout_constraintStart_toStartOf="@+id/tv_cloudValue"
                         app:layout_constraintTop_toBottomOf="@+id/tv_cloudValue" />
@@ -185,16 +200,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="@+id/iv_visibilityImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_visibilityImage"
                         app:layout_constraintTop_toBottomOf="@+id/iv_visibilityImage" />
 
                     <TextView
                         android:id="@+id/textView13"
+                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_visibility"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_visibilityValue"
                         app:layout_constraintStart_toStartOf="@+id/tv_visibilityValue"
                         app:layout_constraintTop_toBottomOf="@+id/tv_visibilityValue" />
@@ -213,6 +231,7 @@
                     <TextView
                         android:id="@+id/tv_humidityValue"
                         android:layout_width="wrap_content"
+                        android:textColor="@color/white"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="@+id/iv_humidityImage"
@@ -224,6 +243,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_humidity"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_humidityValue"
                         app:layout_constraintStart_toStartOf="@+id/tv_humidityValue"
                         app:layout_constraintTop_toBottomOf="@+id/tv_humidityValue" />
@@ -244,6 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="@+id/iv_pressureImage"
                         app:layout_constraintHorizontal_bias="0.428"
                         app:layout_constraintStart_toStartOf="@+id/iv_pressureImage"
@@ -255,6 +277,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/tv_pressure"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_pressureValue"
                         app:layout_constraintStart_toStartOf="@+id/tv_pressureValue"
                         app:layout_constraintTop_toBottomOf="@+id/tv_pressureValue" />
@@ -274,6 +298,7 @@
                         android:id="@+id/tv_feelsLike"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/white"
                         android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="@+id/iv_feelsLikeImage"
                         app:layout_constraintStart_toStartOf="@+id/iv_feelsLikeImage"
@@ -283,6 +308,8 @@
                         android:id="@+id/textView20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
                         android:text="@string/tv_feelsLike"

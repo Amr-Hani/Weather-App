@@ -6,11 +6,13 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="16dp"
-    app:cardCornerRadius="16dp">
+    app:cardCornerRadius="16dp"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/background_card">
 
         <TextView
             android:id="@+id/tv_tempWitherForCast"
@@ -20,7 +22,8 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_witherForCast"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_discretion"
-            app:layout_constraintTop_toTopOf="@+id/iv_witherForCast" />
+            app:layout_constraintTop_toTopOf="@+id/iv_witherForCast"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/tv_discretion"
@@ -30,9 +33,10 @@
             app:layout_constraintEnd_toStartOf="@+id/tv_tempWitherForCast"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_day"
-            app:layout_constraintTop_toTopOf="@+id/tv_tempWitherForCast" />
+            app:layout_constraintTop_toTopOf="@+id/tv_tempWitherForCast"
+            android:textColor="@color/white"/>
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_witherForCast"
             android:layout_width="65dp"
             android:layout_height="50dp"
@@ -47,6 +51,7 @@
 
         <TextView
             android:id="@+id/tv_day"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/tv_discretion"

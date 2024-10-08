@@ -1,12 +1,16 @@
 package com.example.witherapp.favorite.view
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.location.Geocoder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.witherapp.MainActivity
 import com.example.witherapp.databinding.FavoritePlaceItemBinding
 import com.example.witherapp.model.FavoritePlace
 
@@ -29,7 +33,16 @@ class FavoritePlaceAdapter(val onClickListner: OnClickListner<FavoritePlace>) :
             holder.itemView.context
         )
         holder.binding.btnDeletePlace.setOnClickListener() {
-            onClickListner.onClicK(currentFavoritePlace)
+            AlertDialog.Builder(holder.itemView.context)
+                .setTitle("Deletion")
+                .setMessage("Do You Want Remove This Place From Favorite")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    onClickListner.onClicK(currentFavoritePlace)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                    }
+                .show()
         }
         holder.binding.cvFavoritePlace.setOnClickListener() {
             val action =

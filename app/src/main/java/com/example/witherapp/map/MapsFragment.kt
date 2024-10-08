@@ -1,5 +1,6 @@
-package com.example.witherapp
+package com.example.witherapp.map
 
+import android.app.AlertDialog
 import android.location.Geocoder
 import androidx.fragment.app.Fragment
 
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.example.witherapp.R
 import com.example.witherapp.database.FavoritePlaceLocalDataSource
 import com.example.witherapp.database.MyRoomDatabase
 import com.example.witherapp.databinding.FragmentMapsBinding
@@ -43,7 +45,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     lateinit var binding: FragmentMapsBinding
     lateinit var favoriteViewModel: FavoriteViewModel
     lateinit var favoriteViewModelFactory: FavoriteViewModelFactory
-    lateinit var navigate:String
+    lateinit var navigate: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,26 +81,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-
-        // تحريك الكاميرا إلى نقطة معينة
         val myHome = LatLng(30.651783424151727, 31.6327091306448)
         currentMarker =
             map.addMarker(MarkerOptions().position(myHome).title("Hod Negeih, Hihya, Al-Sharqia"))
         map.moveCamera(CameraUpdateFactory.newLatLng(myHome))
 
-        // التعامل مع الضغط على الخريطة لإضافة Marker جديد
         map.setOnMapClickListener { latLng ->
             currentMarker?.remove()
-            // إضافة Marker في المكان الذي تم الضغط عليه
-
-            // تحريك الكاميرا إلى الموقع الجديد
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
 
             Log.d("TAG", "onMapReady: ${latLng.latitude}        ${latLng.longitude}")
             val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
             if (addresses != null && addresses.isNotEmpty()) {
                 val address = addresses[0]
-                locationAddress = address.getAddressLine(0) // تخزين العنوان في المتغير
+                locationAddress = address.getAddressLine(0)
                 currentMarker =
                     map.addMarker(MarkerOptions().position(latLng).title(locationAddress))
                 binding.addFavorite.visibility = View.VISIBLE
@@ -108,43 +104,61 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         latitude = latLng.latitude,
                         longitude = latLng.longitude
                     )
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        when(navigate)
-                        {
-                            "MAP"->{
-                                withContext(Dispatchers.Main)
-                                {
-                                val action = MapsFragmentDirections.actionMapsFragmentToNavHome().apply { latLong = "MAP,${favoritePlace.latitude},${favoritePlace.longitude}" }
-                                Navigation.findNavController(binding.root).navigate(action)
-                            }}
-                            else->{
-                                val result = favoriteViewModel.insert(favoritePlace)
-                                withContext(Dispatchers.Main)
-                                {
-                                    if (result > 0) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "كدا انت حبيبي",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        val action =
-                                            MapsFragmentDirections.actionMapsFragmentToNavFavorite()
-                                        Navigation.findNavController(binding.root).navigate(action)
-                                    } else {
-                                        Toast.makeText(requireContext(), "كدا انا زعلت", Toast.LENGTH_SHORT)
-                                            .show()
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Maps")
+                        .setMessage("Do You Want Add this Place")
+                        .setPositiveButton("Yes") { dialog, _ ->
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                when (navigate) {
+                                    "MAP" -> {
+                                        withContext(Dispatchers.Main)
+                                        {
+                                            val action =
+                                                MapsFragmentDirections.actionMapsFragmentToNavHome()
+                                                    .apply {
+                                                        latLong =
+                                                            "MAP,${favoritePlace.latitude},${favoritePlace.longitude}"
+                                                    }
+                                            Navigation.findNavController(binding.root)
+                                                .navigate(action)
+                                        }
+                                    }
+
+                                    else -> {
+                                        val result = favoriteViewModel.insert(favoritePlace)
+                                        withContext(Dispatchers.Main)
+                                        {
+                                            if (result > 0) {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "كدا انت حبيبي",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                val action =
+                                                    MapsFragmentDirections.actionMapsFragmentToNavFavorite()
+                                                Navigation.findNavController(binding.root)
+                                                    .navigate(action)
+                                            } else {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "كدا انا زعلت",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                            }
+                                        }
                                     }
                                 }
+
                             }
                         }
-
-                    }
-
+                        .setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
                 }
-                // عرض العنوان (يمكن استبداله بحفظه أو استخدامه)
-                println("Address: $locationAddress")
             } else {
-                println("Address not found!")
+                Log.d("TAG", "onMapReady: Address not found!")
             }
         }
     }

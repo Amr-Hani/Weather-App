@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.witherapp.MyKey
 import com.example.witherapp.databinding.WitherForcastFiveWeakBinding
 import com.example.witherapp.model.WitherForecastItem
 import com.example.witherapp.ui.home.DiffUtil
@@ -47,12 +48,7 @@ class WitherForCastAdapter :
         holder.binding.tvDiscretion.text = currentWeatherForCast.weather.get(0).description
 
         showTemp(holder,currentWeatherForCast)
-
-        val imgUrl = "$IMG_URL${currentWeatherForCast.weather[0].icon}$END_POINT"
-        Glide.with(holder.itemView.context)
-            .load(imgUrl)
-            .into(holder.binding.ivWitherForCast)
-
+        holder.binding.ivWitherForCast.setImageResource(MyKey.getImage(currentWeatherForCast.weather[0].icon))
     }
 
     fun convertToDays(date: String): String {

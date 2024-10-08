@@ -1,4 +1,4 @@
-package com.example.witherapp.ui.slideshow
+package com.example.witherapp.ui.setting
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -12,11 +12,18 @@ import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.example.witherapp.Language
+import com.example.witherapp.Location
+import com.example.witherapp.MyKey
+import com.example.witherapp.Notification
+import com.example.witherapp.Units
+import com.example.witherapp.Wind
 import com.example.witherapp.databinding.FragmentSlideshowBinding
 
 class SettingFragment : Fragment() {
     lateinit var binding: FragmentSlideshowBinding
     lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,7 +34,7 @@ class SettingFragment : Fragment() {
 
         binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         sharedPreferences =
-            requireActivity().getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+            requireActivity().getSharedPreferences(MyKey.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
         return binding.root
     }
 
@@ -37,11 +44,12 @@ class SettingFragment : Fragment() {
         getUnit()
         getLocation()
         getWindSpeed()
+        getNotification()
     }
 
 
     fun getLanguage() {
-        val language = sharedPreferences.getString("LANGUAGE", "en")
+        val language = sharedPreferences.getString(MyKey.LANGUAGE_KEY, Language.ar.toString())
         when (language) {
             "ar" -> binding.rbArabic.isChecked = true
             "en" -> binding.rbEnglish.isChecked = true
@@ -49,13 +57,13 @@ class SettingFragment : Fragment() {
         binding.rgLanguage.setOnCheckedChangeListener() { groub, checkedId ->
             if (binding.rbArabic == binding.root.findViewById(checkedId)) {
                 Toast.makeText(requireContext(), "arabic", Toast.LENGTH_SHORT).show()
-                sharedPreferences.edit().putString("LANGUAGE", "ar").apply()
+                sharedPreferences.edit().putString(MyKey.LANGUAGE_KEY, Language.ar.toString()).apply()
                 Thread.sleep(500)
                 changeLanguage("ar")
                 restartApp()
             } else {
                 Toast.makeText(requireContext(), "english", Toast.LENGTH_SHORT).show()
-                sharedPreferences.edit().putString("LANGUAGE", "en").apply()
+                sharedPreferences.edit().putString(MyKey.LANGUAGE_KEY,Language.en.toString()).apply()
                 Thread.sleep(500)
                 changeLanguage("en")
                 restartApp()
@@ -64,7 +72,7 @@ class SettingFragment : Fragment() {
     }
 
     fun getUnit() {
-        val unit = sharedPreferences.getString("UNIT", "celsius")
+        val unit = sharedPreferences.getString(MyKey.UNIT_KEY, Units.celsius.toString())
         when (unit) {
             "celsius" -> binding.rbCelsius.isChecked = true
             "kelvin" -> binding.rbKelvin.isChecked = true
@@ -72,18 +80,18 @@ class SettingFragment : Fragment() {
         }
         binding.rgTemperature.setOnCheckedChangeListener { group, checkedId ->
             if (binding.rbKelvin == binding.root.findViewById(checkedId)) {
-                sharedPreferences.edit().putString("UNIT", "kelvin").apply()
-                Toast.makeText(requireContext(), "kelvin", Toast.LENGTH_SHORT).show()
+                sharedPreferences.edit().putString(MyKey.UNIT_KEY, Units.kelvin.toString()).apply()
+                Toast.makeText(requireContext(), Units.kelvin.toString(), Toast.LENGTH_SHORT).show()
                 Thread.sleep(500)
                 restartApp()
             } else if (binding.rbFehrenheit == binding.root.findViewById(checkedId)) {
-                sharedPreferences.edit().putString("UNIT", "fehrenheit").apply()
-                Toast.makeText(requireContext(), "fehrenheit", Toast.LENGTH_SHORT).show()
+                sharedPreferences.edit().putString(MyKey.UNIT_KEY, Units.fehrenheit.toString()).apply()
+                Toast.makeText(requireContext(), Units.fehrenheit.toString(), Toast.LENGTH_SHORT).show()
                 Thread.sleep(500)
                 restartApp()
             } else {
-                sharedPreferences.edit().putString("UNIT", "celsius").apply()
-                Toast.makeText(requireContext(), "celsius", Toast.LENGTH_SHORT).show()
+                sharedPreferences.edit().putString(MyKey.UNIT_KEY, Units.celsius.toString()).apply()
+                Toast.makeText(requireContext(), Units.celsius.toString(), Toast.LENGTH_SHORT).show()
                 Thread.sleep(500)
                 restartApp()
             }
@@ -92,19 +100,19 @@ class SettingFragment : Fragment() {
     }
 
     fun getLocation() {
-        val location = sharedPreferences.getString("LOCATION", "gps")
+        val location = sharedPreferences.getString(MyKey.LOCATION_KEY, Location.gps.toString())
         when (location) {
-            "map" -> binding.rbMap.isChecked = true
-            "gps" -> binding.rbGps.isChecked = true
+            Location.map.toString() -> binding.rbMap.isChecked = true
+            Location.gps.toString() -> binding.rbGps.isChecked = true
         }
         binding.rgLocation.setOnCheckedChangeListener { group, checkedId ->
             if (binding.rbGps == binding.root.findViewById(checkedId)) {
-                sharedPreferences.edit().putString("LOCATION", "gps").apply()
+                sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.gps.toString()).apply()
                 Thread.sleep(500)
                 val action = SettingFragmentDirections.actionNavSettingToNavHome()
                 Navigation.findNavController(binding.root).navigate(action)
             } else {
-                sharedPreferences.edit().putString("LOCATION", "map").apply()
+                sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.map.toString()).apply()
                 Thread.sleep(500)
                 val action = SettingFragmentDirections.actionNavSettingToMapsFragment().apply {
                     map = "MAP"
@@ -116,20 +124,20 @@ class SettingFragment : Fragment() {
 
     fun getWindSpeed()
     {
-        val wind = sharedPreferences.getString("WIND", "meter")
+        val wind = sharedPreferences.getString(MyKey.WIND_KEY, Wind.meter.toString())
         when (wind) {
-            "meter" -> binding.rbMeter.isChecked = true
-            "mile" -> binding.rbMile.isChecked = true
+            Wind.meter.toString() -> binding.rbMeter.isChecked = true
+            Wind.mile.toString() -> binding.rbMile.isChecked = true
         }
         binding.rgWindSpeed.setOnCheckedChangeListener { group, checkedId ->
             if ( binding.rbMile == binding.root.findViewById(checkedId))
             {
-                sharedPreferences.edit().putString("WIND","mile").apply()
+                sharedPreferences.edit().putString(MyKey.WIND_KEY,Wind.mile.toString()).apply()
                 Thread.sleep(500)
                 restartApp()
             }else
             {
-                sharedPreferences.edit().putString("WIND","meter").apply()
+                sharedPreferences.edit().putString(MyKey.WIND_KEY,Wind.meter.toString()).apply()
                 Thread.sleep(500)
                 restartApp()
             }
@@ -138,20 +146,20 @@ class SettingFragment : Fragment() {
 
  fun getNotification()
     {
-        val notification = sharedPreferences.getString("NOTIFICATION", "enabled")
+        val notification = sharedPreferences.getString(MyKey.NOTIFICATION_KEY, Notification.enabled.toString())
         when (notification) {
-            "enabled" -> binding.rbEnglish.isChecked = true
-            "mile" -> binding.rbDisabled.isChecked = true
+            Notification.enabled.toString() -> binding.rbEnabled.isChecked = true
+            Notification.disabled.toString() -> binding.rbDisabled.isChecked = true
         }
-        binding.rgWindSpeed.setOnCheckedChangeListener { group, checkedId ->
+        binding.rgNotification.setOnCheckedChangeListener { group, checkedId ->
             if ( binding.rbDisabled == binding.root.findViewById(checkedId))
             {
-                sharedPreferences.edit().putString("NOTIFICATION","disabled").apply()
+                sharedPreferences.edit().putString(MyKey.NOTIFICATION_KEY,Notification.disabled.toString()).apply()
                 Thread.sleep(500)
                 restartApp()
             }else
             {
-                sharedPreferences.edit().putString("NOTIFICATION","enabled").apply()
+                sharedPreferences.edit().putString(MyKey.NOTIFICATION_KEY,Notification.enabled.toString()).apply()
                 Thread.sleep(500)
                 restartApp()
             }
@@ -178,7 +186,7 @@ class SettingFragment : Fragment() {
         AppCompatDelegate.setApplicationLocales(appLocale)
     }
 
-    fun reUpDateCangedApp(fragment: Fragment) {
+    fun reUpDateChangedApp(fragment: Fragment) {
         val fragmentManager = fragment.parentFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 

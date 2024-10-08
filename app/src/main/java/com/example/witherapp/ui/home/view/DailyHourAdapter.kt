@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.witherapp.MyKey
 import com.example.witherapp.databinding.DailyHourBinding
 import com.example.witherapp.model.WitherForecastItem
 import com.example.witherapp.ui.home.DiffUtil
@@ -44,10 +45,7 @@ class DailyHourAdapter :
         holder.binding.tvHour.text = convertTo12HourTime(currentWitherForecastItem.dt_txt)
         holder.binding.tvTemp.text = currentWitherForecastItem.main.temp.toString()
         showTemp(holder,currentWitherForecastItem)
-        val imgUrl = "$IMG_URL${currentWitherForecastItem.weather[0].icon}$END_POINT"
-        Glide.with(holder.itemView.context)
-            .load(imgUrl)
-            .into(holder.binding.ivDailyHour)
+        holder.binding.ivDailyHour.setImageResource(MyKey.getImage(currentWitherForecastItem.weather[0].icon))
 
     }
 
