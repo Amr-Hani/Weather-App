@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.witherapp.ApiState
 import com.example.witherapp.model.CurrentWeatherResponse
+import com.example.witherapp.model.IRepo
 import com.example.witherapp.model.Repo
 import com.example.witherapp.model.WitherForecastResponse
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.Language
 
-class HomeViewModel(val repo: Repo) : ViewModel() {
+class HomeViewModel(val repo: IRepo) : ViewModel() {
 
     private val witherOfTheDayMutableStateFlow = MutableStateFlow<ApiState<CurrentWeatherResponse>>(ApiState.Loading())
     val witherOfTheDayStateFlow = witherOfTheDayMutableStateFlow.asStateFlow()

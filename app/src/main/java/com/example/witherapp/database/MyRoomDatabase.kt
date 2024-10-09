@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.witherapp.model.SingleAlarm
 import com.example.witherapp.model.FavoritePlace
 
-@Database(entities = arrayOf(FavoritePlace::class), version = 1)
+@Database(entities = arrayOf(FavoritePlace::class, SingleAlarm::class), version = 2)
 
 abstract class MyRoomDatabase : RoomDatabase() {
     abstract fun getAllFavoritePlace(): DAO
+
     companion object {
         private var instance: MyRoomDatabase? = null
         fun getInstance(context: Context): MyRoomDatabase {
@@ -19,7 +21,8 @@ abstract class MyRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     MyRoomDatabase::class.java,
                     "product_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                    .build()
                 instance = temp
                 temp
             }

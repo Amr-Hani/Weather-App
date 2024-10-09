@@ -1,44 +1,54 @@
 package com.example.witherapp.model
 
-import com.example.witherapp.database.LocalDataSource
-import com.example.witherapp.network.RemoteDataSource
+import com.example.witherapp.database.ILocalDataSource
+import com.example.witherapp.network.IRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 
-class Repo private constructor(
-    private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource
-) {
+class Repo (
+    private val iRemoteDataSource: IRemoteDataSource,
+    private val iLocalDataSource: ILocalDataSource
+) : IRepo {
 
     companion object {
         private var instance: Repo? = null
         fun getInstance(
-            remoteDataSource: RemoteDataSource,
-            localDataSource: LocalDataSource
+            iRemoteDataSource: IRemoteDataSource,
+            iLocalDataSource: ILocalDataSource
         ): Repo {
             return instance ?: synchronized(this) {
-                val temp = Repo(remoteDataSource, localDataSource)
+                val temp = Repo(iRemoteDataSource, iLocalDataSource)
                 instance = temp
                 temp
             }
         }
     }
 
-    suspend fun getWitherOfTheDay(lat: Double, long: Double,language:String): Flow<CurrentWeatherResponse> =
-        remoteDataSource.getWitherOfTheDay(lat, long,language)
+    override suspend fun getWitherOfTheDay(lat: Double, long: Double, language:String): Flow<CurrentWeatherResponse> =
+        iRemoteDataSource.getWitherOfTheDay(lat, long,language)
 
-    suspend fun getWitherForCast(lat: Double, long: Double,language:String): Flow<WitherForecastResponse> =
-        remoteDataSource.getWitherForCast(lat, long,language)
+    override suspend fun getWitherForCast(lat: Double, long: Double, language:String): Flow<WitherForecastResponse> =
+        iRemoteDataSource.getWitherForCast(lat, long,language)
 
 
 
-    fun getAllFavoritePlace(): Flow<List<FavoritePlace>> =
-        localDataSource.getAllFavoriteProduct()
+    override fun getAllFavoritePlace(): Flow<List<FavoritePlace>> =
+        iLocalDataSource.getAllFavoriteProduct()
 
-    suspend fun insertFavoritePlace(favoritePlace: FavoritePlace):Long =
-        localDataSource.insert(favoritePlace)
+    override suspend fun insertFavoritePlace(favoritePlace: FavoritePlace):Long =
+        iLocalDataSource.insert(favoritePlace)
 
-    suspend fun deleteFavoritePlace(favoritePlace: FavoritePlace):Int =
-        localDataSource.delete(favoritePlace)
+    override suspend fun deleteFavoritePlace(favoritePlace: FavoritePlace):Int =
+        iLocalDataSource.delete(favoritePlace)
+
+
+    override fun getAllAlarmLocation(): Flow<List<SingleAlarm>> =
+        iLocalDataSource.getAllAlarmLocation()
+
+    override suspend fun insertAlarmLocation(singleAlarm: SingleAlarm):Long =
+        iLocalDataSource.insertAlarmLocation(singleAlarm)
+
+    override suspend fun deleteAlarmLocation(singleAlarm: SingleAlarm):Int =
+        iLocalDataSource.deleteAlarmLocation(singleAlarm)
 
 
 }

@@ -1,20 +1,17 @@
 package com.example.witherapp.favorite.viewmodel
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.witherapp.ApiState
 import com.example.witherapp.model.FavoritePlace
-import com.example.witherapp.model.Repo
+import com.example.witherapp.model.IRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class FavoriteViewModel(private val repo: Repo) : ViewModel() {
+class FavoriteViewModel(private val repo: IRepo) : ViewModel() {
     private var mutableFavoritePlaceStateFlow =
         MutableStateFlow<ApiState<List<FavoritePlace>>>(ApiState.Loading())
     val favoritePlaceStateFlow = mutableFavoritePlaceStateFlow.asStateFlow()

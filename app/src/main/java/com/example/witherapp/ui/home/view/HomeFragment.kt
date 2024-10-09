@@ -73,16 +73,19 @@ class HomeFragment : Fragment() {
 
     var max = Double.MIN_VALUE
     var min = Double.MAX_VALUE
+
     val gson = Gson()
-    var isConnected = false
-    lateinit var message:String
+
+    companion object {
+        var isConnected = false
+    }
+
+    var message: String? = null
+
     override fun onStart() {
         super.onStart()
 
-
-
         val argument: MutableList<String> = MutableList(3) { "" }
-        Log.d("TAG", "onStart: isConnected $isConnected")
         if (requireArguments() != null) {
             val split = HomeFragmentArgs.fromBundle(requireArguments()).latLong.split(",")
             if (split.size == 3) {
@@ -98,15 +101,18 @@ class HomeFragment : Fragment() {
         val longitude = argument[2]
 
         Log.d("TAG", "onStart: argument = $argument")
+        Log.d("TAG", "onStart: argument = $isConnected")
         if (isConnected) {
             when (message) {
                 "FAVORITE" -> {
                     getFavoriteLocation(latitude.toDouble(), longitude.toDouble())
                     Log.d("TAG", "onStart: message FAVORITE")
                 }
+
                 "MAP" -> {
                     getFavoriteLocation(latitude.toDouble(), longitude.toDouble())
                 }
+
                 else -> {
 
                     if (checkSelfPermission()) {
@@ -126,7 +132,6 @@ class HomeFragment : Fragment() {
 
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -136,7 +141,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.progressBar.visibility = View.VISIBLE
+
         homeViewModelFactory = HomeViewModelFactory(
             Repo.getInstance(
                 RemoteDataSource.getInstance(
@@ -162,7 +167,6 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-
         sharedPreferences =
             requireContext().getSharedPreferences(MyKey.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
@@ -181,122 +185,15 @@ class HomeFragment : Fragment() {
         isConnected =
             networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
 
-        if(!isConnected) {
-            when (message) {
-                "FAVORITE" -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "No NetWork",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                "MAP" -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "No NetWork",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {
-                    when (language) {
-                        "ar" -> {
-                            val cachingCurrent = gson.fromJson(
-                                sharedPreferences.getString(
-                                    MyKey.CACHING_CURRENT_ARABIC,
-                                    "Un Known Data"
-                                )
-                                    ?: "Un Known Data",
-                                CurrentWeatherResponse::class.java
-                            )
-                            val type = object : TypeToken<List<WitherForecastItem>>() {}.type
-                            val cachingDailyHour: List<WitherForecastItem> = gson.fromJson(
-                                sharedPreferences.getString(
-                                    MyKey.CACHING_DAILY_HOUR_ARABIC,
-                                    "Un Known Data"
-                                ) ?: "Un Known Data",
-                                type
-                            )
-                            val cachingWitherForCast: List<WitherForecastItem> = gson.fromJson(
-                                sharedPreferences.getString(
-                                    MyKey.CACHING_WITHER_FOR_CAST_ARABIC,
-                                    "Un Known Data"
-                                ) ?: "Un Known Data",
-                                type
-                            )
-                            if (sharedPreferences.getString(
-                                    MyKey.CACHING_CURRENT_ARABIC,
-                                    "Un Known Data"
-                                ) == "Un Known Data"
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "مفيش انترنت ومفيش داتا قديمه",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                showCachingCurrentDay(cachingCurrent, language)
-                                showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
-                                showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
-                            }
-                            Toast.makeText(
-                                requireContext(),
-                                "مفيش انترنت ودى داتا قديمه",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        else -> {
-                            val cachingCurrent = gson.fromJson(
-                                sharedPreferences.getString(
-                                    MyKey.CACHING_CURRENT_ENGLISH,
-                                    "Un Known Data"
-                                )
-                                    ?: "Un Known Data",
-                                CurrentWeatherResponse::class.java
-                            )
-                            val type = object : TypeToken<List<WitherForecastItem>>() {}.type
-                            val cachingDailyHour: List<WitherForecastItem> = gson.fromJson(
-                                sharedPreferences.getString(
-                                    MyKey.CACHING_DAILY_HOUR_ENGLISH,
-                                    "Un Known Data"
-                                ) ?: "Un Known Data",
-                                type
-                            )
-                            val cachingWitherForCast: List<WitherForecastItem> = gson.fromJson(
-                                sharedPreferences.getString(
-                                    MyKey.CACHING_WITHER_FOR_CAST_ENGLISH,
-                                    "Un Known Data"
-                                ) ?: "Un Known Data",
-                                type
-                            )
-                            if (sharedPreferences.getString(
-                                    MyKey.CACHING_CURRENT_ARABIC,
-                                    "Un Known Data"
-                                ) == "Un Known Data"
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "No Internet And Un Known Data In Caching",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                showCachingCurrentDay(cachingCurrent, language)
-                                showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
-                                showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
-                            }
-                            Toast.makeText(
-                                requireContext(),
-                                "No Internet And Get Data From Caching Caching",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-            }
-            Log.d("TAG", "onStart: get data from caching")
+        Log.d("TAG", "onViewCreated: isConnected $isConnected")
+        if (!isConnected) {
+            binding.progressBar.visibility = View.GONE
+            showFromCaching()
+        } else {
+            binding.progressBar.visibility = View.VISIBLE
+            currentWitherOfTheDayLifeCycle()
+            forCastWitherOfTheWeekLifeCycle()
         }
-
-        currentWitherOfTheDayLifeCycle()
-        forCastWitherOfTheWeekLifeCycle()
     }
 
     fun currentWitherOfTheDayLifeCycle() {
@@ -362,27 +259,18 @@ class HomeFragment : Fragment() {
                     }
                 }
                 binding.tvDescription.text = currentDay.weather.get(0).description
-                Log.d("TAG", "onCreateView: Success witherOfTheDay")
+                Log.d("TAG", "onCreateView: Success witherOfTheDay arabic")
                 binding.tvPressureValue.text = "${currentDay.main.pressure}ض.ج "
                 binding.tvHumidityValue.text = "${currentDay.main.humidity} % "
 
                 binding.tvCloudValue.text = "${currentDay.clouds.all} %"
                 binding.tvVisibilityValue.text = "${currentDay.visibility} م "
                 binding.tvLocation.text =
-                    getReadableLocation(currentDay.coord.lat, currentDay.coord.lon)
+                    getLocationName(currentDay.coord.lat, currentDay.coord.lon)
                 binding.imageView2.setImageResource(MyKey.getImage(currentDay.weather.get(0).icon))
                 val jsonCurrentDay = gson.toJson(currentDay)
                 sharedPreferences.edit().putString(MyKey.CACHING_CURRENT_ARABIC, jsonCurrentDay)
                     .apply()
-                Log.d(
-                    "TAG",
-                    "onCreateView: getReadableLocationArabic(currentDay.coord.lat, currentDay.coord.lon) ${
-                        getReadableLocation(
-                            currentDay.coord.lat,
-                            currentDay.coord.lon
-                        )
-                    }"
-                )
             }
 
             "en" -> {
@@ -398,7 +286,7 @@ class HomeFragment : Fragment() {
                         binding.tvFeelsLike.text =
                             "${convertFromCelsiusToKelvin(currentDay.main.feels_like)} K"
                         binding.tvLocation.text =
-                            getReadableLocation(currentDay.coord.lat, currentDay.coord.lon)
+                            getLocationName(currentDay.coord.lat, currentDay.coord.lon)
                     }
 
                     "fehrenheit" -> {
@@ -419,12 +307,12 @@ class HomeFragment : Fragment() {
                     }
                 }
                 binding.tvDescription.text = currentDay.weather.get(0).description
-                Log.d("TAG", "onCreateView: Success witherOfTheDay")
+                Log.d("TAG", "onCreateView: Success witherOfTheDay english")
                 binding.tvPressureValue.text = "${currentDay.main.pressure} hpa"
                 binding.tvHumidityValue.text = "${currentDay.main.humidity} %"
                 binding.tvCloudValue.text = "${currentDay.clouds.all} %"
                 binding.tvLocation.text =
-                    getReadableLocation(currentDay.coord.lat, currentDay.coord.lon)
+                    getLocationName(currentDay.coord.lat, currentDay.coord.lon)
                 binding.tvVisibilityValue.text = "${currentDay.visibility} m"
 
                 binding.imageView2.setImageResource(MyKey.getImage(currentDay.weather.get(0).icon))
@@ -441,7 +329,8 @@ class HomeFragment : Fragment() {
             homeViewModel.witherForCastStateFlow.collect {
                 when (it) {
                     is ApiState.Failure -> {
-                        }
+                    }
+
                     is ApiState.Loading -> Log.d("TAG", "onCreateView: Success witherForCast")
                     is ApiState.Success -> {
                         forCastHourlyOfTheDay(it.data)
@@ -454,7 +343,7 @@ class HomeFragment : Fragment() {
 
     fun forCastHourlyOfTheDay(witherForecast: WitherForecastResponse) {
         val currentDay = witherForecast.list.get(0).dt_txt.split(" ")
-        Log.d("TAG", "onCreateView: haaaaaaaaaaaaa ${currentDay.get(0)}")
+        Log.d("TAG", "onCreateView: ${currentDay.get(0)}")
         var currentDayDateArr = currentDay.get(0).split("-").toMutableList()
         if (currentDayDateArr.get(2).toInt() < 10) {
             var tomorrowDay = currentDayDateArr.get(2).toInt() + 1
@@ -471,7 +360,6 @@ class HomeFragment : Fragment() {
         )
         val mutwitherForCatMutableList = mutableListOf<WitherForecastItem>()
         for (wither in witherForecast.list) {
-            Log.d("TAG", "onCreateView: nooooooooo ${wither.dt_txt.split(" ").get(0)}")
             if (wither.dt_txt.startsWith(currentDay.get(0)) || wither.dt_txt.startsWith(
                     tomorrowsDate
                 )
@@ -516,6 +404,158 @@ class HomeFragment : Fragment() {
         homeViewModel.getWitherForCast(latitude, longtude, language)
     }
 
+    fun getLocationName(latitude: Double, longitude: Double): String {
+        val geocoder = Geocoder(requireContext())
+        val readableLocation = geocoder.getFromLocation(latitude, longitude, 1)
+        val address = readableLocation?.get(0)
+
+        val city = address?.subLocality ?: address?.locality ?: "Unknown City"
+        val state = address?.adminArea ?: "Unknown State"
+        val country = address?.countryName ?: "Unknown Country"
+
+        return "$city, $state ,$country"
+    }
+
+    fun showFromCaching() {
+        when (message) {
+            "FAVORITE" -> {
+                Toast.makeText(
+                    requireContext(),
+                    "No NetWork",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            "MAP" -> {
+                Toast.makeText(
+                    requireContext(),
+                    "No NetWork",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> {
+                when (language) {
+                    "ar" -> {
+                        val cachingCurrent = gson.fromJson(
+                            sharedPreferences.getString(
+                                MyKey.CACHING_CURRENT_ARABIC,
+                                "Un Known Data"
+                            )
+                                ?: "Un Known Data",
+                            CurrentWeatherResponse::class.java
+                        )
+                        val type = object : TypeToken<List<WitherForecastItem>>() {}.type
+                        val cachingDailyHour: List<WitherForecastItem> = gson.fromJson(
+                            sharedPreferences.getString(
+                                MyKey.CACHING_DAILY_HOUR_ARABIC,
+                                "Un Known Data"
+                            ) ?: "Un Known Data",
+                            type
+                        )
+                        val cachingWitherForCast: List<WitherForecastItem> = gson.fromJson(
+                            sharedPreferences.getString(MyKey.CACHING_WITHER_FOR_CAST_ARABIC, "Un Known Data") ?: "Un Known Data",
+                            type
+                        )
+                        if (sharedPreferences.getString(
+                                MyKey.CACHING_CURRENT_ARABIC,
+                                "Un Known Data"
+                            ) == "Un Known Data"
+                        ) {
+                            Toast.makeText(
+                                requireContext(),
+                                "مفيش انترنت ومفيش داتا قديمه",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            showCachingCurrentDay(cachingCurrent, language)
+                            showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
+                            showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
+                        }
+                        Toast.makeText(
+                            requireContext(),
+                            "مفيش انترنت ودى داتا قديمه",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    else -> {
+                        val cachingCurrent = gson.fromJson(
+                            sharedPreferences.getString(
+                                MyKey.CACHING_CURRENT_ENGLISH,
+                                "Un Known Data"
+                            )
+                                ?: "Un Known Data",
+                            CurrentWeatherResponse::class.java
+                        )
+                        val type = object : TypeToken<List<WitherForecastItem>>() {}.type
+                        val cachingDailyHour: List<WitherForecastItem> = gson.fromJson(
+                            sharedPreferences.getString(
+                                MyKey.CACHING_DAILY_HOUR_ENGLISH,
+                                "Un Known Data"
+                            ) ?: "Un Known Data",
+                            type
+                        )
+                        val cachingWitherForCast: List<WitherForecastItem> = gson.fromJson(
+                            sharedPreferences.getString(
+                                MyKey.CACHING_WITHER_FOR_CAST_ENGLISH,
+                                "Un Known Data"
+                            ) ?: "Un Known Data",
+                            type
+                        )
+                        if (sharedPreferences.getString(
+                                MyKey.CACHING_CURRENT_ARABIC,
+                                "Un Known Data"
+                            ) == "Un Known Data"
+                        ) {
+                            Toast.makeText(
+                                requireContext(),
+                                "No Internet And Un Known Data In Caching",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            showCachingCurrentDay(cachingCurrent, language)
+                            showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
+                            showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
+                        }
+                        Toast.makeText(
+                            requireContext(),
+                            "No Internet And Get Data From Caching Caching",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+        Log.d("TAG", "onStart: get data from caching")
+
+    }
+
+    fun convertFromCelsiusToFahrenheit(temp: Double): Int {
+        return ((temp * 1.8) + 32).toInt()
+    }
+
+    fun convertFromCelsiusToKelvin(temp: Double): Int {
+        return (temp + 273.15).toInt()
+    }
+
+    fun convertMeterPerSecToMilePerHour(m: Double): Int {
+        return (m * 2.23694).toInt()
+    }
+
+    fun showCachingCurrentDay(currentDay: CurrentWeatherResponse, language: String) {
+        currentWitherOfTheDaySuccess(currentDay, language)
+    }
+
+    fun showCachingDailyHour(witherForecast: WitherForecastResponse) {
+        dailyHourAdapter.submitList(witherForecast.list)
+    }
+
+    fun showCachingWitherForCast(witherForecast: WitherForecastResponse) {
+        witherForCastAdapter.submitList(witherForecast.list)
+    }
+
+    //Location
     @SuppressLint("MissingPermission")
     fun getFreshLocation() {
         fusedLocationProviderClient =
@@ -525,9 +565,6 @@ class HomeFragment : Fragment() {
         }.build(), object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
-
-                Log.d("TAG", "onLocationResult: 3ezzat ${p0.locations.toString()}")
-
                 val longitude = p0.locations.lastOrNull()?.longitude
                 val latitude = p0.locations.lastOrNull()?.latitude
 
@@ -535,10 +572,6 @@ class HomeFragment : Fragment() {
                     homeViewModel.getWitherOfTheDay(latitude, longitude, language)
                     homeViewModel.getWitherForCast(latitude, longitude, language)
                 }
-
-                val currentLocation = p0.locations.lastOrNull()?.latitude
-                Log.d("TAG", "onLocationResult: 3m ay haga$currentLocation")
-                Log.d("TAG", "onLocationResult: ${p0.lastLocation?.longitude.toString()}")
             }
         }, Looper.myLooper()
         )
@@ -591,40 +624,4 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun getReadableLocation(latitude: Double, longitude: Double): String {
-        val geocoder = Geocoder(requireContext())
-        val readableLocation = geocoder.getFromLocation(latitude, longitude, 1)
-        val address = readableLocation?.get(0)
-
-        val city = address?.subLocality ?: address?.locality ?: "Unknown City"
-        val state = address?.adminArea ?: "Unknown State"
-        val country = address?.countryName ?: "Unknown Country"
-
-        return "$city, $state ,$country"
-    }
-
-    fun convertFromCelsiusToFahrenheit(temp: Double): Int {
-        return ((temp * 1.8) + 32).toInt()
-    }
-
-    fun convertFromCelsiusToKelvin(temp: Double): Int {
-        return (temp + 273.15).toInt()
-    }
-
-    fun convertMeterPerSecToMilePerHour(m: Double): Int {
-        return (m * 2.23694).toInt()
-    }
-
-
-    fun showCachingCurrentDay(currentDay: CurrentWeatherResponse, language: String) {
-        currentWitherOfTheDaySuccess(currentDay, language)
-    }
-
-    fun showCachingDailyHour(witherForecast: WitherForecastResponse) {
-        dailyHourAdapter.submitList(witherForecast.list)
-    }
-
-    fun showCachingWitherForCast(witherForecast: WitherForecastResponse) {
-        witherForCastAdapter.submitList(witherForecast.list)
-    }
 }

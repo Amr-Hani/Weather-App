@@ -7,12 +7,15 @@ import android.content.Intent
 import android.location.Geocoder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.witherapp.MainActivity
 import com.example.witherapp.databinding.FavoritePlaceItemBinding
 import com.example.witherapp.model.FavoritePlace
+import com.example.witherapp.ui.home.view.HomeFragment
 
 class FavoritePlaceAdapter(val onClickListner: OnClickListner<FavoritePlace>) :
     ListAdapter<FavoritePlace, FavoritePlaceAdapter.FavoritePlaceViewHolder>(MyFavoriteDiffUtil()) {
@@ -32,6 +35,7 @@ class FavoritePlaceAdapter(val onClickListner: OnClickListner<FavoritePlace>) :
             currentFavoritePlace.longitude,
             holder.itemView.context
         )
+
         holder.binding.btnDeletePlace.setOnClickListener() {
             AlertDialog.Builder(holder.itemView.context)
                 .setTitle("Deletion")
@@ -44,13 +48,20 @@ class FavoritePlaceAdapter(val onClickListner: OnClickListner<FavoritePlace>) :
                     }
                 .show()
         }
-        holder.binding.cvFavoritePlace.setOnClickListener() {
-            val action =
-                FavoriteFragmentDirections.actionNavFavoriteToNavHome().apply {
-                    latLong ="FAVORITE,${currentFavoritePlace.latitude},${currentFavoritePlace.longitude}"
-                }
-            Navigation.findNavController(binding.root).navigate(action)
+        if(HomeFragment.isConnected)
+        {
+            holder.binding.cvFavoritePlace.setOnClickListener() {
+                val action =
+                    FavoriteFragmentDirections.actionNavFavoriteToNavHome().apply {
+                        latLong ="FAVORITE,${currentFavoritePlace.latitude},${currentFavoritePlace.longitude}"
+                    }
+                Navigation.findNavController(binding.root).navigate(action)
+            }
         }
+        else{
+            Toast.makeText(holder.itemView.context,"No Internet", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     class FavoritePlaceViewHolder(val binding: FavoritePlaceItemBinding) :

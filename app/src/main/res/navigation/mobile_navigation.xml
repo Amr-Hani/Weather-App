@@ -18,9 +18,17 @@
 
     <fragment
         android:id="@+id/nav_alarm"
-        android:name="com.example.witherapp.ui.gallery.GalleryFragment"
+        android:name="com.example.witherapp.ui.alarm.view.AlarmFragment"
         android:label="@string/menu_alarm"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_nav_alarm_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <argument
+            android:name="alarm"
+            app:argType="string"
+            android:defaultValue="null" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_setting"
@@ -61,5 +69,8 @@
         <action
             android:id="@+id/action_mapsFragment_to_nav_home"
             app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_mapsFragment_to_nav_alarm"
+            app:destination="@id/nav_alarm" />
     </fragment>
 </navigation>

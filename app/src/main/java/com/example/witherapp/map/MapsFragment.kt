@@ -1,6 +1,13 @@
 package com.example.witherapp.map
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.PendingIntent
+import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.location.Geocoder
 import androidx.fragment.app.Fragment
 
@@ -19,11 +26,15 @@ import com.example.witherapp.database.MyRoomDatabase
 import com.example.witherapp.databinding.FragmentMapsBinding
 import com.example.witherapp.favorite.viewmodel.FavoriteViewModel
 import com.example.witherapp.favorite.viewmodel.FavoriteViewModelFactory
+import com.example.witherapp.model.SingleAlarm
 import com.example.witherapp.model.FavoritePlace
 import com.example.witherapp.model.Repo
 import com.example.witherapp.network.ApiServices
 import com.example.witherapp.network.RetrofitHelper
 import com.example.witherapp.network.RemoteDataSource
+import com.example.witherapp.ui.alarm.AlarmReceiver
+import com.example.witherapp.ui.alarm.viewmodel.AlarmViewModel
+import com.example.witherapp.ui.alarm.viewmodel.AlarmViewModelFactory
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -32,9 +43,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 import java.util.Locale
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
@@ -46,6 +59,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     lateinit var favoriteViewModel: FavoriteViewModel
     lateinit var favoriteViewModelFactory: FavoriteViewModelFactory
     lateinit var navigate: String
+
+    lateinit var alarmViewModel: AlarmViewModel
+    lateinit var alarmViewModelFactory: AlarmViewModelFactory
+
+
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+
+    private lateinit var pendingIntent: PendingIntent
+
+    private lateinit var alarmManager: AlarmManager
+
+    lateinit var singleAlarm: SingleAlarm
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,6 +104,22 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         favoriteViewModel =
             ViewModelProvider(this, favoriteViewModelFactory).get(FavoriteViewModel::class.java)
 
+
+        alarmViewModelFactory = AlarmViewModelFactory(
+            Repo.getInstance(
+                RemoteDataSource.getInstance(
+                    RetrofitHelper.retrofitInstance.create(ApiServices::class.java)
+                ),
+                LocalDataSource(
+                    MyRoomDatabase.getInstance(requireContext()).getAllFavoritePlace()
+                )
+            )
+        )
+
+        alarmViewModel =
+            ViewModelProvider(this, alarmViewModelFactory).get(AlarmViewModel::class.java)
+
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -92,8 +135,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
             Log.d("TAG", "onMapReady: ${latLng.latitude}        ${latLng.longitude}")
             val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            latitude = latLng.latitude
+            longitude = latLng.longitude
+            Log.d("TAG", "onMapReady:  الونج والات بيتبعت ولا لا  $latitude   >> $longitude")
             if (addresses != null && addresses.isNotEmpty()) {
                 val address = addresses[0]
+                singleAlarm = SingleAlarm(address = address.getAddressLine(0).toString(), date = "")
+
                 locationAddress = address.getAddressLine(0)
                 currentMarker =
                     map.addMarker(MarkerOptions().position(latLng).title(locationAddress))
@@ -104,62 +152,149 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         latitude = latLng.latitude,
                         longitude = latLng.longitude
                     )
-                    AlertDialog.Builder(requireContext())
-                        .setTitle("Maps")
-                        .setMessage("Do You Want Add this Place")
-                        .setPositiveButton("Yes") { dialog, _ ->
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                when (navigate) {
-                                    "MAP" -> {
-                                        withContext(Dispatchers.Main)
-                                        {
-                                            val action =
-                                                MapsFragmentDirections.actionMapsFragmentToNavHome()
-                                                    .apply {
-                                                        latLong =
-                                                            "MAP,${favoritePlace.latitude},${favoritePlace.longitude}"
-                                                    }
-                                            Navigation.findNavController(binding.root)
-                                                .navigate(action)
-                                        }
-                                    }
-
-                                    else -> {
-                                        val result = favoriteViewModel.insert(favoritePlace)
-                                        withContext(Dispatchers.Main)
-                                        {
-                                            if (result > 0) {
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "كدا انت حبيبي",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                val action =
-                                                    MapsFragmentDirections.actionMapsFragmentToNavFavorite()
-                                                Navigation.findNavController(binding.root)
-                                                    .navigate(action)
-                                            } else {
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "كدا انا زعلت",
-                                                    Toast.LENGTH_SHORT
-                                                )
-                                                    .show()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        when (navigate) {
+                            "MAP" -> {
+                                withContext(Dispatchers.Main)
+                                {
+                                    val action =
+                                        MapsFragmentDirections.actionMapsFragmentToNavHome()
+                                            .apply {
+                                                latLong =
+                                                    "MAP,${favoritePlace.latitude},${favoritePlace.longitude}"
                                             }
-                                        }
+                                    Navigation.findNavController(binding.root)
+                                        .navigate(action)
+                                }
+                            }
+
+                            "Alarm" -> {
+                                withContext(Dispatchers.Main)
+                                {
+                                    showDatePickerDialog()
+                                }
+                            }
+
+                            else -> {
+                                val result = favoriteViewModel.insert(favoritePlace)
+                                withContext(Dispatchers.Main)
+                                {
+                                    if (result > 0) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "كدا انت حبيبي",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        val action =
+                                            MapsFragmentDirections.actionMapsFragmentToNavFavorite()
+                                        Navigation.findNavController(binding.root)
+                                            .navigate(action)
+                                    } else {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "كدا انا زعلت",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
                                     }
                                 }
-
                             }
                         }
-                        .setNegativeButton("No") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
+
+                    }
+
                 }
             } else {
                 Log.d("TAG", "onMapReady: Address not found!")
             }
         }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(
+            requireContext(),
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val selectedDate = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, selectedYear)
+                    set(Calendar.MONTH, selectedMonth)
+                    set(Calendar.DAY_OF_MONTH, selectedDay)
+                }
+                showTimePickerDialog(selectedDate)
+            },
+            year, month, day
+        ).apply {
+            datePicker.minDate = System.currentTimeMillis() - 1000
+        }.show()
+    }
+
+    private fun showTimePickerDialog(selectedDate: Calendar) {
+        val hour = selectedDate.get(Calendar.HOUR_OF_DAY)
+        val minute = selectedDate.get(Calendar.MINUTE)
+
+        TimePickerDialog(
+            requireContext(),
+            { _, selectedHour, selectedMinute ->
+                selectedDate.apply {
+                    set(Calendar.HOUR_OF_DAY, selectedHour)
+                    set(Calendar.MINUTE, selectedMinute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                if (selectedDate.timeInMillis <= System.currentTimeMillis()) {
+                    Toast.makeText(requireContext(), "Select vaield Time", Toast.LENGTH_SHORT)
+                        .show()
+
+                    Snackbar.make(
+                        requireView(),
+                        "Please select a future time",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                } else {
+                    scheduleAlarm(selectedDate)
+                    //navigateBackToAlertFragment()
+                }
+            },
+            hour, minute, false
+        ).show()
+    }
+
+    @SuppressLint("ScheduleExactAlarm")
+    private fun scheduleAlarm(selectedDateTime: Calendar) {
+        Log.d("TAG", "scheduleAlarm: الونج والات بيتبعت ولا لا  $latitude   >> $longitude")
+        val intent = Intent(requireContext(), AlarmReceiver::class.java)
+        intent.putExtra("lat", latitude.toDouble())
+        intent.putExtra("long", longitude.toDouble())
+        pendingIntent = PendingIntent.getBroadcast(
+            requireContext(), 0, intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            selectedDateTime.timeInMillis,
+            pendingIntent
+        )
+        singleAlarm.date = selectedDateTime.timeInMillis.toString()
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            val result = alarmViewModel.insertAlarmLocation(singleAlarm)
+            withContext(Dispatchers.Main)
+            {
+                if (result > 0) {
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                    val action = MapsFragmentDirections.actionMapsFragmentToNavAlarm()
+                    Navigation.findNavController(binding.root).navigate(action)
+                } else {
+                    Toast.makeText(requireContext(), "Field", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     }
 }

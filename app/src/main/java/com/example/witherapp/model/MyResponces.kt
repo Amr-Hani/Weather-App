@@ -73,3 +73,11 @@ data class FavoritePlace(
     val latitude: Double,
     val longitude: Double
 )
+
+@Entity(tableName = "my_alarm_manger")
+data class SingleAlarm(
+    @PrimaryKey(autoGenerate = true)
+    var primaryKey: Int = 0,
+    val address: String,
+    var date: String
+)

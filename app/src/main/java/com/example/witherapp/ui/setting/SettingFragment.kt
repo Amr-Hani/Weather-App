@@ -29,9 +29,6 @@ class SettingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val slideshowViewModel =
-            ViewModelProvider(this).get(SettingViewModel::class.java)
-
         binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         sharedPreferences =
             requireActivity().getSharedPreferences(MyKey.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
@@ -100,20 +97,20 @@ class SettingFragment : Fragment() {
     }
 
     fun getLocation() {
-        val location = sharedPreferences.getString(MyKey.LOCATION_KEY, Location.gps.toString())
-        when (location) {
-            Location.map.toString() -> binding.rbMap.isChecked = true
-            Location.gps.toString() -> binding.rbGps.isChecked = true
-        }
+//        val location = sharedPreferences.getString(MyKey.LOCATION_KEY, Location.gps.toString())
+//        when (location) {
+//            Location.map.toString() -> binding.rbMap.isChecked = true
+//            Location.gps.toString() -> binding.rbGps.isChecked = true
+//        }
         binding.rgLocation.setOnCheckedChangeListener { group, checkedId ->
             if (binding.rbGps == binding.root.findViewById(checkedId)) {
-                sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.gps.toString()).apply()
-                Thread.sleep(500)
+                //sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.gps.toString()).apply()
+                //Thread.sleep(500)
                 val action = SettingFragmentDirections.actionNavSettingToNavHome()
                 Navigation.findNavController(binding.root).navigate(action)
-            } else {
-                sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.map.toString()).apply()
-                Thread.sleep(500)
+            } else if (binding.rbMap == binding.root.findViewById(checkedId)){
+                //sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.map.toString()).apply()
+                //Thread.sleep(500)
                 val action = SettingFragmentDirections.actionNavSettingToMapsFragment().apply {
                     map = "MAP"
                 }

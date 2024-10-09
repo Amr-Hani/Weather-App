@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -21,6 +22,7 @@ import com.example.witherapp.model.Repo
 import com.example.witherapp.network.ApiServices
 import com.example.witherapp.network.RetrofitHelper
 import com.example.witherapp.network.RemoteDataSource
+import com.example.witherapp.ui.home.view.HomeFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -74,12 +76,19 @@ class FavoriteFragment : Fragment(),OnClickListner<FavoritePlace> {
 
             }}
         }
+        if(HomeFragment.isConnected)
+        {
+            binding.FAB.setOnClickListener() {
 
-        binding.FAB.setOnClickListener() {
-            val action = FavoriteFragmentDirections.actionNavFavoriteToMapsFragment()
+                val action = FavoriteFragmentDirections.actionNavFavoriteToMapsFragment()
 
-            Navigation.findNavController(view).navigate(action)
+                Navigation.findNavController(view).navigate(action)
+            }
         }
+        else{
+            Toast.makeText(requireContext(),"No Internet",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onClicK(pojo: FavoritePlace) {
