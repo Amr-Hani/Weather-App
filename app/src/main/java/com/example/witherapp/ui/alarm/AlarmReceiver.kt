@@ -16,9 +16,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.witherapp.MyKey
 import com.example.witherapp.Notification
 import com.example.witherapp.R
@@ -51,22 +49,20 @@ class AlarmReceiver : BroadcastReceiver() {
     companion object {
         const val CHANNEL_ID = "WeatherAlertChannel"
         const val NOTIFICATION_ID = 200
-        const val ACTION_DISMISS = "com.example.weatherwise.DISMISS_ALERT"
+        const val ACTION_CLOSE = "com.example.weatherwise.DISMISS_ALERT"
         private var ringtone: Ringtone? = null
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("TAG", "onReceive: ${AlarmFragment.primaryKey}")
-
-
         latitude = intent.extras?.getDouble("lat")
         longitude = intent.extras?.getDouble("long")
         Log.d("TAG", "onReceive: lat $latitude , lon $longitude")
         when (intent.action) {
-            ACTION_DISMISS -> {
-                dismissAlert(context)
-            }
+            ACTION_CLOSE -> {
+                closeAlert(context)
 
+            }
             else -> CoroutineScope(Dispatchers.IO).launch {
                 val response =
                     Repo.getInstance(
@@ -78,6 +74,7 @@ class AlarmReceiver : BroadcastReceiver() {
                         )
                     ).getWitherOfTheDay(latitude!!, longitude!!, "en")
                 response.catch {
+
                     Toast.makeText(
                         context.applicationContext,
                         "Failed to get temperature",
@@ -104,12 +101,12 @@ class AlarmReceiver : BroadcastReceiver() {
         )
 
         val channelId = CHANNEL_ID
-        createNotificationChannel(context, channelId)
+        createNotification(context, channelId)
 
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
 
         val dismissIntent = Intent(context, AlarmReceiver::class.java).apply {
-            action = ACTION_DISMISS
+            action = ACTION_CLOSE
         }
         val dismissPendingIntent = PendingIntent.getBroadcast(
             context,
@@ -128,7 +125,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.mist)
             .setContentTitle("Weather Alert")
-            .setContentText("The temp is $temp is $country")
+            .setContentText("The temperature is $temp is $country")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
@@ -138,28 +135,19 @@ class AlarmReceiver : BroadcastReceiver() {
                 dismissPendingIntent,
             )
             .setAutoCancel(true)
-            .setSound(null)  // Disable notification sound
+            .setSound(null)
             .setContentIntent(openFragmentPendingIntent)
 
         val notificationManager =
             ContextCompat.getSystemService(context, NotificationManager::class.java)
         notificationManager?.notify(NOTIFICATION_ID, notificationBuilder.build())
 
-//        val notificationOrAlarm =
-//            context.getSharedPreferences(Constants.NOTIFICATION_SHARED_PREFS, Context.MODE_PRIVATE)
-//                .getString(Constants.NOTIFICATION_SHARED_PREFS_KEY, "alarm")
-//
-//        // Play the sound manually
-//        if (notificationOrAlarm == "alarm") {
-//            playSound(context, soundUri)
-//            }
-//}
         if (notification == Notification.enabled.toString()) {
-            playSound(context, soundUri)
+            startSound(context, soundUri)
         }
     }
 
-    private fun playSound(context: Context, soundUri: android.net.Uri) {
+    private fun startSound(context: Context, soundUri: android.net.Uri) {
         ringtone = RingtoneManager.getRingtone(context, soundUri)
         (context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.let { audioManager ->
             if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
@@ -172,24 +160,23 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun dismissAlert(context: Context) {
-        // Stop the ringtone
+    private fun closeAlert(context: Context) {
         ringtone?.stop()
 
-        // Cancel the notification
+
         val notificationManager =
             ContextCompat.getSystemService(context, NotificationManager::class.java)
         notificationManager?.cancel(NOTIFICATION_ID)
     }
 
-    private fun createNotificationChannel(context: Context, channelId: String) {
+    private fun createNotification(context: Context, channelId: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Weather Alerts"
             val descriptionText = "Channel for weather alerts"
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(channelId, name, importance).apply {
                 description = descriptionText
-                setSound(null, null)  // Disable sound for the channel
+                setSound(null, null)
             }
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

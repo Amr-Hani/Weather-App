@@ -19,6 +19,7 @@ import com.example.witherapp.Notification
 import com.example.witherapp.Units
 import com.example.witherapp.Wind
 import com.example.witherapp.databinding.FragmentSlideshowBinding
+import com.example.witherapp.ui.home.view.HomeFragment
 
 class SettingFragment : Fragment() {
     lateinit var binding: FragmentSlideshowBinding
@@ -102,6 +103,8 @@ class SettingFragment : Fragment() {
 //            Location.map.toString() -> binding.rbMap.isChecked = true
 //            Location.gps.toString() -> binding.rbGps.isChecked = true
 //        }
+        if(HomeFragment.isConnected)
+        {
         binding.rgLocation.setOnCheckedChangeListener { group, checkedId ->
             if (binding.rbGps == binding.root.findViewById(checkedId)) {
                 //sharedPreferences.edit().putString(MyKey.LOCATION_KEY, Location.gps.toString()).apply()
@@ -116,6 +119,9 @@ class SettingFragment : Fragment() {
                 }
                 Navigation.findNavController(binding.root).navigate(action)
             }
+        }}
+        else{
+            Toast.makeText(requireContext(),"No Internet",Toast.LENGTH_SHORT).show()
         }
     }
 

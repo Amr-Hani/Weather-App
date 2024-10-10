@@ -248,15 +248,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 if (selectedDate.timeInMillis <= System.currentTimeMillis()) {
                     Toast.makeText(requireContext(), "Select vaield Time", Toast.LENGTH_SHORT)
                         .show()
-
-                    Snackbar.make(
-                        requireView(),
-                        "Please select a future time",
-                        Snackbar.LENGTH_LONG
-                    ).show()
                 } else {
                     scheduleAlarm(selectedDate)
-                    //navigateBackToAlertFragment()
                 }
             },
             hour, minute, false
@@ -276,10 +269,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
+            AlarmManager
+                .RTC_WAKEUP,
             selectedDateTime.timeInMillis,
             pendingIntent
         )
+        //alarmManager.cancel(pendingIntent)
         singleAlarm.date = selectedDateTime.timeInMillis.toString()
         lifecycleScope.launch(Dispatchers.IO) {
 

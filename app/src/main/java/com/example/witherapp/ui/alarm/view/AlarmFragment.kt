@@ -84,7 +84,7 @@ class AlarmFragment : Fragment(), OnClickListner<SingleAlarm> {
                     }
                     is ApiState.Success -> {
                         alarmAdapter.submitList(it.data)
-                    }
+                     }
                 }
             }
         }
