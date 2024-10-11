@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -60,6 +61,8 @@ class HomeFragment : Fragment() {
 
     lateinit var homeViewModel: HomeViewModel
     lateinit var homeViewModelFactory: HomeViewModelFactory
+
+    lateinit var backPressCallback: OnBackPressedCallback
 
     lateinit var binding: FragmentHomeBinding
 
@@ -142,6 +145,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        backPressCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backPressCallback)
         homeViewModelFactory = HomeViewModelFactory(
             Repo.getInstance(
                 RemoteDataSource.getInstance(
@@ -609,15 +618,41 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
+
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == MY_LOCATION_PERMISSION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                getFreshLocation()
+            if (grantResults.isNotEmpty() &&
+                (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                if (isLocationEnabled()) {
+                    getFreshLocation()
+                } else {
+                    enableLocationServices()
+                }
+            } else {
+                binding.progressBar.visibility = View.GONE
+                binding.cardView.visibility = View.GONE
+                binding.cardView2.visibility = View.GONE
+                binding.rvTempretureDay.visibility = View.GONE
+                binding.rvWitherForCast.visibility = View.GONE
+                if(language == "en")
+                {
+                    binding.tvLocation.text = "Not Found Any Data Plese Turn On GPS"
+                }
+                else{
+                    binding.tvLocation.text = "لا يوجد اى بيانات من فضلك فعل اللوكيشن"
+                }
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        backPressCallback.remove()
+    }
+
 
 }

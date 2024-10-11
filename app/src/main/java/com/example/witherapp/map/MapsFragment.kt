@@ -116,8 +116,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
         alarmViewModel =
             ViewModelProvider(this, alarmViewModelFactory).get(AlarmViewModel::class.java)
-
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

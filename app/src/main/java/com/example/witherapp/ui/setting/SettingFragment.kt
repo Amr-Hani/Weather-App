@@ -47,7 +47,7 @@ class SettingFragment : Fragment() {
 
 
     fun getLanguage() {
-        val language = sharedPreferences.getString(MyKey.LANGUAGE_KEY, Language.ar.toString())
+        val language = sharedPreferences.getString(MyKey.LANGUAGE_KEY, Language.en.toString())
         when (language) {
             "ar" -> binding.rbArabic.isChecked = true
             "en" -> binding.rbEnglish.isChecked = true
