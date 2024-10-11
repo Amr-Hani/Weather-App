@@ -16,7 +16,6 @@ class FavoriteViewModel(private val repo: IRepo) : ViewModel() {
         MutableStateFlow<ApiState<List<FavoritePlace>>>(ApiState.Loading())
     val favoritePlaceStateFlow = mutableFavoritePlaceStateFlow.asStateFlow()
 
-
     suspend fun insert(favoritePlace: FavoritePlace): Long {
         getAllFavoriteProduct()
         return  repo.insertFavoritePlace(favoritePlace)

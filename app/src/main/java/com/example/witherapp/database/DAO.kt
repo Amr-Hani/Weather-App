@@ -20,6 +20,9 @@ interface DAO {
     @Query("SELECT * FROM my_favorite_place")
     fun getAllMyFavoritePlace():Flow<List<FavoritePlace>>
 
+
+
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAlarmLocation(singleAlarm: SingleAlarm):Long
 

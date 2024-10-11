@@ -2,7 +2,6 @@ package com.example.witherapp.map
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog
@@ -43,7 +42,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -171,7 +169,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                             "Alarm" -> {
                                 withContext(Dispatchers.Main)
                                 {
-                                    showDatePickerDialog()
+                                    showAndSitTime()
                                 }
                             }
 
@@ -210,7 +208,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun showDatePickerDialog() {
+    private fun showAndSitTime() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -224,7 +222,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     set(Calendar.MONTH, selectedMonth)
                     set(Calendar.DAY_OF_MONTH, selectedDay)
                 }
-                showTimePickerDialog(selectedDate)
+                showAndSitDate(selectedDate)
             },
             year, month, day
         ).apply {
@@ -232,7 +230,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }.show()
     }
 
-    private fun showTimePickerDialog(selectedDate: Calendar) {
+    private fun showAndSitDate(selectedDate: Calendar) {
         val hour = selectedDate.get(Calendar.HOUR_OF_DAY)
         val minute = selectedDate.get(Calendar.MINUTE)
 
@@ -240,16 +238,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             requireContext(),
             { _, selectedHour, selectedMinute ->
                 selectedDate.apply {
+
                     set(Calendar.HOUR_OF_DAY, selectedHour)
                     set(Calendar.MINUTE, selectedMinute)
                     set(Calendar.SECOND, 0)
                     set(Calendar.MILLISECOND, 0)
+
                 }
                 if (selectedDate.timeInMillis <= System.currentTimeMillis()) {
                     Toast.makeText(requireContext(), "Select vaield Time", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    scheduleAlarm(selectedDate)
+                    createdAlarm(selectedDate)
+                    singleAlarm.date = selectedDate.timeInMillis.toString()
                 }
             },
             hour, minute, false
@@ -257,13 +258,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    private fun scheduleAlarm(selectedDateTime: Calendar) {
+    private fun createdAlarm(selectedDateTime: Calendar) {
+
+        val alarmId = System.currentTimeMillis().toInt()
+        singleAlarm.primaryKey = alarmId
+
         Log.d("TAG", "scheduleAlarm: الونج والات بيتبعت ولا لا  $latitude   >> $longitude")
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        intent.putExtra("lat", latitude.toDouble())
-        intent.putExtra("long", longitude.toDouble())
+
+        intent.putExtra("alarmId", alarmId)
+        intent.putExtra("lat", latitude)
+        intent.putExtra("long", longitude)
+
         pendingIntent = PendingIntent.getBroadcast(
-            requireContext(), 0, intent,
+            requireContext(), alarmId, intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -274,10 +282,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             selectedDateTime.timeInMillis,
             pendingIntent
         )
-        //alarmManager.cancel(pendingIntent)
-        singleAlarm.date = selectedDateTime.timeInMillis.toString()
         lifecycleScope.launch(Dispatchers.IO) {
-
             val result = alarmViewModel.insertAlarmLocation(singleAlarm)
             withContext(Dispatchers.Main)
             {

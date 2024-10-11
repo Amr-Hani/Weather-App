@@ -1,6 +1,9 @@
 package com.example.witherapp.ui.alarm.view
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkManager
 import com.example.witherapp.ApiState
 import com.example.witherapp.MyKey
 import com.example.witherapp.database.LocalDataSource
@@ -23,9 +27,11 @@ import com.example.witherapp.model.SingleAlarm
 import com.example.witherapp.network.ApiServices
 import com.example.witherapp.network.RemoteDataSource
 import com.example.witherapp.network.RetrofitHelper
+import com.example.witherapp.ui.alarm.AlarmReceiver
 import com.example.witherapp.ui.alarm.viewmodel.AlarmViewModel
 import com.example.witherapp.ui.alarm.viewmodel.AlarmViewModelFactory
 import com.example.witherapp.ui.home.view.HomeFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -83,6 +89,12 @@ class AlarmFragment : Fragment(), OnClickListner<SingleAlarm> {
                         Log.d("TAG", "onViewCreated: loading ")
                     }
                     is ApiState.Success -> {
+                        it.data.forEach{
+                            if(it.date.toLong() <= System.currentTimeMillis())
+                            {
+                                alarmViewModel.deleteAlarmLocation(it)
+                            }
+                        }
                         alarmAdapter.submitList(it.data)
                      }
                 }
@@ -105,11 +117,19 @@ class AlarmFragment : Fragment(), OnClickListner<SingleAlarm> {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onClicK(pojo: SingleAlarm) {
+        val intent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra("alarmId", pojo.primaryKey)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            pojo.primaryKey,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
+
         alarmViewModel.deleteAlarmLocation(pojo)
     }
 }

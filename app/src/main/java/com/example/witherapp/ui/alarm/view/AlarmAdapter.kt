@@ -24,10 +24,6 @@ import com.example.witherapp.ui.alarm.viewmodel.AlarmViewModelFactory
 
 class AlarmAdapter(val onClickListner: OnClickListner<SingleAlarm>) : ListAdapter<SingleAlarm, AlarmAdapter.AlarmViewHolder>(AlarmDiffUtil()) {
     lateinit var binding: ShowAlarmItemBinding
-
-    lateinit var alarmViewModel: AlarmViewModel
-    lateinit var alarmViewModelFactory: AlarmViewModelFactory
-
     lateinit var language: String
     lateinit var sharedPreferences: SharedPreferences
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {

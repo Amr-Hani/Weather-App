@@ -437,92 +437,88 @@ class HomeFragment : Fragment() {
             else -> {
                 when (language) {
                     "ar" -> {
-                        val cachingCurrent = gson.fromJson(
+                        val cachingCurrent :CurrentWeatherResponse?= gson.fromJson(
                             sharedPreferences.getString(
                                 MyKey.CACHING_CURRENT_ARABIC,
-                                "Un Known Data"
+                                null
                             )
-                                ?: "Un Known Data",
+                                ?: null,
                             CurrentWeatherResponse::class.java
                         )
                         val type = object : TypeToken<List<WitherForecastItem>>() {}.type
-                        val cachingDailyHour: List<WitherForecastItem> = gson.fromJson(
+                        val cachingDailyHour: List<WitherForecastItem>? = gson.fromJson(
                             sharedPreferences.getString(
                                 MyKey.CACHING_DAILY_HOUR_ARABIC,
-                                "Un Known Data"
-                            ) ?: "Un Known Data",
+                                null
+                            ) ?: null,
                             type
                         )
-                        val cachingWitherForCast: List<WitherForecastItem> = gson.fromJson(
-                            sharedPreferences.getString(MyKey.CACHING_WITHER_FOR_CAST_ARABIC, "Un Known Data") ?: "Un Known Data",
+                        val cachingWitherForCast: List<WitherForecastItem>? = gson.fromJson(
+                            sharedPreferences.getString(MyKey.CACHING_WITHER_FOR_CAST_ARABIC, null) ?: null,
                             type
                         )
-                        if (sharedPreferences.getString(
-                                MyKey.CACHING_CURRENT_ARABIC,
-                                "Un Known Data"
-                            ) == "Un Known Data"
-                        ) {
-                            Toast.makeText(
-                                requireContext(),
-                                "مفيش انترنت ومفيش داتا قديمه",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
+                        if (cachingCurrent!=null&&cachingDailyHour!=null&&cachingWitherForCast!=null){
+
                             showCachingCurrentDay(cachingCurrent, language)
                             showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
                             showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
+                            Toast.makeText(
+                                requireContext(),
+                                "مفيش انترنت ودى داتا قديمه",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "مفيش انترنت ومفيش داتا قديمه عندك",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        Toast.makeText(
-                            requireContext(),
-                            "مفيش انترنت ودى داتا قديمه",
-                            Toast.LENGTH_SHORT
-                        ).show()
+
                     }
 
                     else -> {
-                        val cachingCurrent = gson.fromJson(
+                        val cachingCurrent:CurrentWeatherResponse? = gson.fromJson(
                             sharedPreferences.getString(
                                 MyKey.CACHING_CURRENT_ENGLISH,
-                                "Un Known Data"
+                                null
                             )
-                                ?: "Un Known Data",
+                                ?: null,
                             CurrentWeatherResponse::class.java
                         )
                         val type = object : TypeToken<List<WitherForecastItem>>() {}.type
-                        val cachingDailyHour: List<WitherForecastItem> = gson.fromJson(
+                        val cachingDailyHour: List<WitherForecastItem>? = gson.fromJson(
                             sharedPreferences.getString(
                                 MyKey.CACHING_DAILY_HOUR_ENGLISH,
-                                "Un Known Data"
-                            ) ?: "Un Known Data",
+                                null
+                            ) ?: null,
                             type
                         )
-                        val cachingWitherForCast: List<WitherForecastItem> = gson.fromJson(
+                        val cachingWitherForCast: List<WitherForecastItem>? = gson.fromJson(
                             sharedPreferences.getString(
                                 MyKey.CACHING_WITHER_FOR_CAST_ENGLISH,
-                                "Un Known Data"
-                            ) ?: "Un Known Data",
+                                null
+                            ) ?: null,
                             type
                         )
-                        if (sharedPreferences.getString(
-                                MyKey.CACHING_CURRENT_ARABIC,
-                                "Un Known Data"
-                            ) == "Un Known Data"
-                        ) {
+                        if(cachingCurrent!=null&&cachingDailyHour!=null&&cachingWitherForCast!=null)
+                        {
+                            showCachingCurrentDay(cachingCurrent, language)
+                            showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
+                            showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
+                            Toast.makeText(
+                                requireContext(),
+                                "No Internet And Get Data From Caching Caching",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
                             Toast.makeText(
                                 requireContext(),
                                 "No Internet And Un Known Data In Caching",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        } else {
-                            showCachingCurrentDay(cachingCurrent, language)
-                            showCachingDailyHour(WitherForecastResponse(cachingDailyHour))
-                            showCachingWitherForCast(WitherForecastResponse(cachingWitherForCast))
                         }
-                        Toast.makeText(
-                            requireContext(),
-                            "No Internet And Get Data From Caching Caching",
-                            Toast.LENGTH_SHORT
-                        ).show()
+
                     }
                 }
             }
